@@ -6,7 +6,7 @@ export default {
   content: [
     "./resources/**/*.blade.php",  // For Blade templates
     "./resources/**/*.js",         // For JavaScript files
-    "./resources/**/*.vue",        // For Vue components
+    "./resources/**/*.vue",
     "./node_modules/flowbite/**/*.js"
   ],
   theme: {

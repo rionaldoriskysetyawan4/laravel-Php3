@@ -1,22 +1,24 @@
 <x-layout>
     <x-slot:title>{{ $title }}</x-slot>
 
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
+    <table class="w-full text-sm text-left text-black dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th>No</th>
-                <th>Departemen</th>
-                <th>Deskripsi</th>
+                <th scope="col" class="px-4 py-3">NO</th>
+                <th scope="col" class="px-4 py-3">Department</th>
+                <th scope="col" class="px-4 py-3">Description</th>
+                
             </tr>
         </thead>
         <tbody>
             @foreach ($departments as $dept)
-                <tr>
-                    <td class="py-3 px-4">{{ $dept->id }}</td>
-                    <td class="py-3 px-4">{{ $dept->name }}</td>
-                    <td class="py-3 px-4">{{ $dept->description }}</td>
-                </tr>
+            <tr class="border-b dark:border-gray-700">
+                <td class="px-4 py-3">{{ $dept->id }}</td>
+                <td class="px-4 py-3">{{  $dept->name }}</td>
+                <td class="px-4 py-3">{{ $dept->description }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>
 </x-layout>
+
