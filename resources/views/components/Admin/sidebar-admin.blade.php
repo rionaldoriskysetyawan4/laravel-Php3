@@ -43,16 +43,16 @@
                 </button>
                 <ul id="dropdown-pages" class="hidden py-2 space-y-2">
                     <li>
-                      <x-navlink-admin href="/contact-admin" :active="request()->is('contact-admin')">Contact</x-navlink-admin>
+                      <x-navlink-admin href="/admin/contact" :active="request()->is('contact-admin')">Contact</x-navlink-admin>
                     </li>
                     <li>
-                      <x-navlink-admin href="/student-admin" :active="request()->is('student-admin')">Student</x-navlink-admin>
+                      <x-navlink-admin href="/admin/students" :active="request()->is('admin-students')">Student</x-navlink-admin>
                     </li>
                     <li>
-                      <x-navlink-admin href="/grade-admin" :active="request()->is('grade-admin')">Grade</x-navlink-admin>
+                      <x-navlink-admin href="/admin/grades" :active="request()->is('grade-admin')">Grade</x-navlink-admin>
                     </li>
                     <li>
-                      <x-navlink-admin href="/department-admin" :active="request()->is('department-admin')">Department</x-navlink-admin>
+                      <x-navlink-admin href="/admin/departments" :active="request()->is('admin.departments')">Department</x-navlink-admin>
                     </li>
                 </ul>
             </li>

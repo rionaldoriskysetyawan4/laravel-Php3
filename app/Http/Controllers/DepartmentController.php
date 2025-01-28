@@ -38,7 +38,7 @@ class DepartmentController extends Controller
             'department' => $department,
         ]);
     }
-
+    //edit
     public function update(Request $request, $id)
     {
         // Find the department by ID or fail
@@ -72,33 +72,54 @@ class DepartmentController extends Controller
         return redirect()->back()->with('success', 'Department updated successfully');
     }
 
+    //delete
     public function destroy($id)
     {
         $department = Department::find($id);
 
         if ($department) {
             $department->delete();
-            return redirect()->route('admin.department')->with('success', 'Department deleted successfully.');
+            return redirect()->route('admin.departments')->with('success', 'Department deleted successfully.');
         }
 
         return redirect()->route('admin.department')->with('error', 'Department not found.');
     }
 
+    //tambahkan
     public function store(Request $request)
     {
+        // Validate based on which fields should be present
+        $rules = [];
+        
+        if ($request->has('departname')) {
+            $rules['departname'] = 'required|string|max:255';
+            $rules['description'] = 'nullable|string|max:500';
+        } else {
+            $rules['clasname'] = 'required|string|max:255';
+        }
+
+        $validated = $request->validate($rules);
+
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string|max:1000',
-                // Add email validation if email field is enabled
-                'email' => config('department.has_email', true) ? 'nullable|email|max:255' : '',
-            ]);
+            $department = new Department();
+            
+            // If departname exists, we're in "this-depart" mode
+            if (isset($validated['departname'])) {
+                $department->name = $validated['departname'];
+                $department->description = $validated['description'] ?? null;
+            } else {
+                $department->class_name = $validated['clasname'];
+            }
 
-            Department::create($validated);
+            $department->save();
 
-            return redirect()->route('admin.department')->with('success', 'Department created successfully.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->route('departments.index')
+                ->with('success', 'Department successfully created!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to create department: ' . $e->getMessage())
+                ->withInput();
         }
     }
+    
 }

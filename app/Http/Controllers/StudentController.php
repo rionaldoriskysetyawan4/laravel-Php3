@@ -33,14 +33,14 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
     
         // Determine if this is an email edit
-        $thisEmail = empty($student->email); // Check if the email field is not empty
+        $thisEmail = !empty($student->email); // Check if the email field is not empty
     
         // Validate the request based on the $thisEmail condition
         if ($thisEmail) {
             // If it's an email edit, validate only the name
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:student,email,' . $student->id, // Adjust the table name if necessary
+                'email' => 'required|email|unique:students,email,' . $student->id, // Adjust the table name if necessary
             ]);
             
             // Update the department with the validated name
@@ -83,11 +83,13 @@ class StudentController extends Controller
 
         if ($student) {
             $student->delete();
-            return redirect()->route('admin.student')->with('success', 'Student deleted successfully');
+            return redirect()->route('admin.students')->with('success', 'Student deleted successfully');
         }
 
-        return redirect()->route('admin.student')->with('error', 'Student not found');
+        return redirect()->route('admin.students')->with('error', 'Student not found');
     }
+
+    //tambahkan
 
     public function store(Request $request)
     {
@@ -107,7 +109,7 @@ class StudentController extends Controller
 
         Student::create($validated);
 
-        return redirect()->route('admin.student')
+        return redirect()->route('admin.students')
             ->with('success', 'Student created successfully');
     }
 }

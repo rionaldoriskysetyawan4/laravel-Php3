@@ -7,7 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\Admin\AdminPage;
 use App\Http\Controllers\DepartmentController;
-use App\Models\Student;
+
 
 Route::get('/home', [HomeController::class, 'index']);
 
@@ -29,32 +29,37 @@ Route::get('contact', function () {
     ]);
 });
 
-Route::get('/home-admin', [AdminPage::class, 'index']);
 
-// Menampilkan daftar siswa
-Route::get('/student-admin', [AdminPage::class, 'index2'])->name('admin.student');
-Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
-Route::post('/students', [StudentController::class, 'store'])->name('students.store');
-Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('delete.student');
+// Group routes with 'admin' prefix
+Route::prefix('admin')->group(function () {
+    Route::get('/home', [AdminPage::class, 'index'])->name('admin.home');
 
-Route::get('/grade-admin', [AdminPage::class, 'index3'])->name('admin.grade');
-Route::post('/grades', [GradeController::class, 'store'])->name('grades.store');
-Route::put('/grades/{id}', [GradeController::class, 'update'])->name('grades.update');
-Route::delete('/grades/{grade}', [GradeController::class, 'destroy'])->name('grades.destroy');
+    // Students
+    Route::get('/students', [AdminPage::class, 'index2'])->name('admin.students');
+    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+    Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 
-Route::get('/department-admin', [AdminPage::class, 'index4'])->name('admin.department');
-Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
-Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+    // Grades
+    Route::get('/grades', [AdminPage::class, 'index3'])->name('admin.grades');
+    Route::post('/grades', [GradeController::class, 'store'])->name('grades.store');
+    Route::put('/grades/{id}', [GradeController::class, 'update'])->name('grades.update');
+    Route::delete('/grades/{id}', [GradeController::class, 'destroy'])->name('grades.destroy');
 
-Route::get('/contact-admin', [AdminPage::class, 'index5']);
+    // Departments
+    Route::get('/departments', [AdminPage::class, 'index4'])->name('admin.departments');
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
+    Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
 
-Route::get('contact-admin', function () {
-    return view('Pages/Admin/contact-admin', [
-        'title' => 'Contact Us',
-        'name' => 'Rionaldo Rizky Setyawan',
-        'class' => '11 PPLG 2',
-        'linkedin' => 'https://www.linkedin.com/in/rionaldo-rizky-setyawan-5aa5162a1/',
-        'github' => 'https://github.com/rionaldoriskysetyawan4',
-    ]);
+    // Contact Admin
+    Route::get('/contact', function () {
+        return view('Pages/Admin/contact-admin', [
+            'title' => 'Contact Us',
+            'name' => 'Rionaldo Rizky Setyawan',
+            'class' => '11 PPLG 2',
+            'linkedin' => 'https://www.linkedin.com/in/rionaldo-rizky-setyawan-5aa5162a1/',
+            'github' => 'https://github.com/rionaldoriskysetyawan4',
+        ]);
+    })->name('admin.contact');
 });

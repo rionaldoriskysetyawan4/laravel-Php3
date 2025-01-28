@@ -21,15 +21,18 @@
         </div>
         <div
             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-            <button type="button" id="openCreateModal"
-                class="flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none dark:focus:ring-blue-900">
-                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true">
-                    <path clip-rule="evenodd" fill-rule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                </svg>
-                Tambahkan
-            </button>
+            <button type="button" id="opencreateGrddprt" data-this-depart="true"
+    class="flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none dark:focus:ring-blue-900">
+    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true">
+        <path clip-rule="evenodd" fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+    </svg>
+    Tambahkan
+</button>
+
+
+
         </div>
         <div class="flex items-center space-x-3 w-full md:w-auto">
             <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown"
@@ -111,7 +114,7 @@
             </div>
         </div>
     </div>
-    </div>
+
     <table class="w-full text-sm text-left text-black dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -154,7 +157,6 @@
                                 <li>
                                     <a data-modal-toggle="deleteModal" data-id="{{ $dept->id }}"
                                         class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-
                                 </li>
                             </ul>
                         </div>
@@ -163,7 +165,7 @@
             @endforeach
         </tbody>
     </table>
-
+    <x-grddprt></x-grddprt>
     <x-updatecode></x-updatecode>
     <x-deletecode></x-deletecode>
 
@@ -187,40 +189,46 @@
     </div>
 @endif
 <script>
-    //Delete
-    function showDeleteModal(departmentId) {
-        // Set the form action to delete the specific student by ID
+    function showDeleteModal(departmentsId) {
+        // Set the form action to delete the specific department by ID
         const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = '/departments/' + departmentId; // Adjust route as needed
+        deleteForm.action = `/admin/departments/${departmentsId}`; // Adjust route as needed
 
         // Show the delete modal
         const deleteModal = document.getElementById('deleteModal');
         deleteModal.classList.remove('hidden');
     }
 
-
     document.addEventListener('DOMContentLoaded', function() {
-        const closeModalButtons = document.querySelectorAll('[data-modal-toggle="deleteModal"]');
+        const modalButtons = document.querySelectorAll('[data-modal-toggle="deleteModal"]');
 
-        closeModalButtons.forEach(button => {
+        modalButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const departmentId = button.getAttribute('data-id');
+                const departmentsId = button.getAttribute('data-id');
+                showDeleteModal(departmentsId);
 
-                // Show the delete modal
-                showDeleteModal(departmentId);
+                // Show the modal
+                const deleteModal = document.getElementById('deleteModal');
+                deleteModal.classList.remove('hidden');
+            });
+        });
+
+        // Close modal on cancel
+        const closeButtons = document.querySelectorAll('[data-modal-toggle="deleteModal"]');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
                 const deleteModal = document.getElementById('deleteModal');
                 deleteModal.classList.add('hidden');
             });
         });
     });
-
     //Edit
     // Function to show the edit modal and set the form action
-    function showEditModal(departmentId) {
+    function showEditModal(departmentsId) {
         const editForm = document.getElementById('editForm');
         if (editForm) {
-            editForm.action = `/departments/${departmentId}`; // Ensure this is correct
+            editForm.action = `/admin/departments/${departmentsId}`; // Ensure this is correct
         }
 
         const editModal = document.getElementById('editModal');
@@ -228,6 +236,7 @@
             editModal.classList.remove('hidden');
         }
     }
+
     document.addEventListener("DOMContentLoaded", function() {
         const editButtons = document.querySelectorAll('.edit-button');
         const editForm = document.getElementById('editForm');
@@ -235,20 +244,20 @@
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
 
-                const departmentId = button.getAttribute('data-id');
+                const departmentsId = button.getAttribute('data-id');
                 const thisEmail = button.getAttribute('data-this-email') === 'true';
                 const emailField = document.getElementById('emailField');
                 const descriptionField = document.getElementById('descriptionField');
                 const editForm = document.getElementById('editForm');
-                const departmentIdInput = document.getElementById('updatecodeId');
+                const departmentsIdInput = document.getElementById('updatecodeId');
                 const emailInput = document.getElementById('editEmail');
                 const descriptionInput = document.getElementById('editDescription');
 
                 // lupa dongo
-                editForm.action = '/departments/' + departmentId;
+                editForm.action = '/admin/departments/' + departmentsId;
 
                 // Set departmentId value to the form
-                departmentIdInput.value = departmentId;
+                departmentsIdInput.value = departmentsId;
 
                 // Clear previous values
                 emailInput.value = '';
@@ -274,38 +283,62 @@
 
 
 
-
-    //
-
-
-
     //Create
-    document.addEventListener('DOMContentLoaded', function() {
+//1 munculkan modal
+//2 munculkan yang perlu diisi
 
-        const modal = document.getElementById('createModal');
+function showCreateModal() {
+    const modal = document.getElementById('createGrddprt');
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('createGrddprt');
+    const openButton = document.getElementById('opencreateGrddprt');
+    const closeButton = document.getElementById('closecreateGrddprt');
+    const departNameField = document.getElementById('departnamefield');
+    const clasNameField = document.getElementById('clasnamefield');
+    const descNameField = document.getElementById('descnamefield');
 
-        const toggleButtons = document.querySelectorAll('[data-modal-toggle="createModal"]');
+    // Open modal
+    openButton.addEventListener('click', function () {
+        const thisDepart = openButton.getAttribute('data-this-depart') === 'true'; // Assuming this value is set dynamically
 
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Toggle class 'hidden' pada modal
-                modal.classList.toggle('hidden');
-                modal.classList.toggle('flex');
-            });
-        });
+        // Clear all fields
+        departNameField.classList.add('hidden');
+        clasNameField.classList.add('hidden');
+        descNameField.classList.add('hidden');
+
+        // Show or hide fields based on thisDepart
+        if (thisDepart) {
+            departNameField.classList.remove('hidden');
+            descNameField.classList.remove('hidden');
+        } else {
+            clasNameField.classList.remove('hidden');
+        }
+
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     });
 
-    document.getElementById('openCreateModal').addEventListener('click', function() {
-        document.getElementById('createModal').classList.remove('hidden');
+    // Close modal
+    closeButton.addEventListener('click', function () {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     });
 
-    // document.getElementById('closeModalButton').addEventListener('click', function() {
-    //     document.getElementById('createModal').classList.add('hidden');
-    // });
-
-    window.addEventListener('click', function(event) {
-        if (event.target === document.getElementById('createModal')) {
-            document.getElementById('createModal').classList.add('hidden');
+    // Close modal when clicking outside the modal
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     });
+});
+
+
+
+
 </script>

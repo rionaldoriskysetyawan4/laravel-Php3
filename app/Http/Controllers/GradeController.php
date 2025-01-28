@@ -49,15 +49,35 @@ class GradeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'department_id' => 'required|exists:departments,id',
-        ]);
-    
+        // Find the department by ID or fail
         $grade = Grade::findOrFail($id);
-        $grade->update($validated);
     
-        return redirect()->route('grade.index')->with('success', 'Grade updated successfully.');
+        // Determine if this is an email edit
+        $thisEmail = !empty($grade->email); // Check if the email field is not empty
+    
+        // Validate the request based on the $thisEmail condition
+        if ($thisEmail) {
+            // If it's an email edit, validate only the name
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:departments,email,' . $grade->id, // Adjust the table name if necessary
+            ]);
+            
+            // Update the department with the validated name
+            $grade->update($validated);
+        } else {
+            // If it's not an email edit, validate the email and name
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string'
+            ]);
+            
+            // Update the department with the validated name and email
+            $grade->update($validated);
+        }
+    
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Department updated successfully');
     }
 
 
@@ -67,10 +87,10 @@ class GradeController extends Controller
             $Grade = Grade::findOrFail($id);
             $Grade->delete();
             
-            return redirect()->route('admin.grade')
+            return redirect()->route('admin.grades')
                            ->with('success', 'Grade deleted successfully');
         } catch (\Exception $e) {
-            return redirect()->route('admin.grade')
+            return redirect()->route('admin.grades')
                            ->with('error', 'Failed to delete Grade');
         }
     }

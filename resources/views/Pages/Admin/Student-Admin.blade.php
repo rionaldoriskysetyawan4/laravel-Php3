@@ -123,6 +123,7 @@
                 <th scope="col" class="px-4 py-3">Department</th>
                 <th scope="col" class="px-4 py-3">Email</th>
                 <th scope="col" class="px-4 py-3">Alamat</th>
+                <th scope="col" class="px-4 py-3">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -196,10 +197,11 @@
     @endif
 
     <script>
+        //delete
         function showDeleteModal(studentId) {
             // Set the form action to delete the specific student by ID
             const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = '/students/' + studentId; // Adjust route as needed
+            deleteForm.action = '/admin/students/' + studentId; // Adjust route as needed
 
             // Show the delete modal
             const deleteModal = document.getElementById('deleteModal');
@@ -227,7 +229,7 @@
         function showEditModal(studentId) {
         const editForm = document.getElementById('editForm');
         if (editForm) {
-            editForm.action = `/students/${studentId}`; // Ensure this is correct
+            editForm.action = `/admin/students/${studentId}`; // Ensure this is correct
         }
 
         const editModal = document.getElementById('editModal');
@@ -252,7 +254,7 @@
                 const descriptionInput = document.getElementById('editDescription');
 
                 // lupa dongo
-                editForm.action = '/students/' + studentId;
+                editForm.action = '/admin/students/' + studentId;
 
                 // Set departmentId value to the form
                 studentIdInput.value = studentId;
@@ -279,6 +281,8 @@
         });
     });
 
+    
+    //tambahkan
         document.addEventListener('DOMContentLoaded', function() {
             // Ambil elemen modal
             const modal = document.getElementById('createModal');
