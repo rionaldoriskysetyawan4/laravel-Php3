@@ -20,17 +20,17 @@
             </form>
         </div>
         <div
-            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-            <button type="button" id="openCreateModal"
-                class="flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none dark:focus:ring-blue-900">
-                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true">
-                    <path clip-rule="evenodd" fill-rule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                </svg>
-                Tambahkan
-            </button>
-        </div>
+        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+        <button type="button" id="opencreateGrddprt" data-this-depart="false"
+            class="flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none dark:focus:ring-blue-900">
+            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path clip-rule="evenodd" fill-rule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+            </svg>
+            Tambahkan
+        </button>
+    </div>
         <div class="flex items-center space-x-3 w-full md:w-auto">
             <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown"
                 class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -173,6 +173,10 @@
         </tbody>
     </table>
 
+    @component('components.grddprt', ['departments' => $grades])
+    @endcomponent
+    {{-- <x-grddprt :departments={{ $students }}></x-grddprt> --}}
+
     <x-updatecode></x-updatecode>
     <x-deletecode></x-deletecode>
     </x-layout>
@@ -190,8 +194,6 @@
     @endif
 
     <script>
-        //EDIT
-
         //Edit
         // Function to show the edit modal and set the form action
         function showEditModal(gradesId) {
@@ -285,4 +287,66 @@
                 });
             });
         });
+
+        //Tambahkan 
+
+        function showCreateModal() {
+    const modal = document.getElementById('createGrddprt');
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('createGrddprt');
+    const openButton = document.getElementById('opencreateGrddprt');
+    const closeButton = document.getElementById('closecreateGrddprt');
+    const departNameField = document.getElementById('departnamefield');
+    const clasNameField = document.getElementById('clasnamefield');
+    const descNameField = document.getElementById('descnamefield');
+    const departmentId = document.getElementById('department_id');
+
+    // Open modal
+    openButton.addEventListener('click', function() {
+        // Get data-this-depart attribute - true for department, false for class
+        const thisDepart = openButton.getAttribute('data-this-depart') === 'true';
+        
+        // First hide all fields
+        if (departNameField) departNameField.classList.add('hidden');
+        if (clasNameField) clasNameField.classList.add('hidden');
+        if (descNameField) descNameField.classList.add('hidden');
+        if (departmentId) departmentId.classList.add('hidden');
+
+        // Show appropriate fields based on thisDepart value
+        if (thisDepart) {
+            // For department creation
+            if (departNameField) departNameField.classList.remove('hidden');
+            if (descNameField) descNameField.classList.remove('hidden');
+        } else {
+            // For class creation
+            if (clasNameField) clasNameField.classList.remove('hidden');
+            if (departmentId) {
+                departmentId.classList.remove('hidden');
+            }
+        }
+
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    });
+
+    // Close modal
+    closeButton.addEventListener('click', function() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    });
+});
     </script>

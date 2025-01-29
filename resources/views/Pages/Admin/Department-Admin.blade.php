@@ -165,7 +165,10 @@
             @endforeach
         </tbody>
     </table>
-    <x-grddprt></x-grddprt>
+    @component('components.grddprt', ['departments' => $departments])
+    @endcomponent
+    {{-- <x-grddprt :departments={{ $students }}></x-grddprt> --}}
+
     <x-updatecode></x-updatecode>
     <x-deletecode></x-deletecode>
 
@@ -300,6 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const departNameField = document.getElementById('departnamefield');
     const clasNameField = document.getElementById('clasnamefield');
     const descNameField = document.getElementById('descnamefield');
+    const departmentId = document.getElementById('department_id')
 
     // Open modal
     openButton.addEventListener('click', function () {
@@ -309,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
         departNameField.classList.add('hidden');
         clasNameField.classList.add('hidden');
         descNameField.classList.add('hidden');
+        departmentId.classList.add('hidden');
 
         // Show or hide fields based on thisDepart
         if (thisDepart) {
@@ -316,6 +321,7 @@ document.addEventListener('DOMContentLoaded', function () {
             descNameField.classList.remove('hidden');
         } else {
             clasNameField.classList.remove('hidden');
+            departmentId.classList.remove('hidden');
         }
 
         // Show modal

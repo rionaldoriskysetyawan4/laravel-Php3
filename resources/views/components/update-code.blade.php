@@ -18,6 +18,7 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="updatecodeId" name="updatecode_id">
+                
                 <div>
                     <label for="editName" class="block text-sm font-medium text-gray-700">Name</label>
                     <input type="text" id="editName" name="name" class="mt-1 block w-full rounded-lg border-gray-300 p-2" required>

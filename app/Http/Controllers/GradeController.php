@@ -28,22 +28,41 @@ class GradeController extends Controller
             'grade' => $grade
         ]);
     }
-
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255|unique:grades',
-                'description' => 'nullable|string|max:1000',
-            ]);
+        // Validate based on which fields should be present
+        $rules = [];
+        
+        if ($request->has('departname')) {
+            $rules['departname'] = 'required|string|max:255';
+            $rules['description'] = 'nullable|string|max:500';
+        } else {
+            $rules['clasname'] = 'required|int|max:2';
+            $rules['department_id'] = 'required|integer|exists:departments,id';
+        }
 
-            Grade::create($validated);
-            return redirect()->route('grade.department')
-                           ->with('success', 'Grade created successfully');
-        } catch (ValidationException $e) {
+        $validated = $request->validate($rules);
+
+        try {
+            $department = new Department();
+            
+            // If departname exists, we're in "this-depart" mode
+            if (isset($validated['departname'])) {
+                $department->name = $validated['departname'];
+                $department->description = $validated['description'] ?? null;
+            } else {
+                $department->class_name = $validated['clasname'];
+                $department->departmentId = $validated['department_id'];
+            }
+
+            $department->save();
+
+            return redirect()->route('admin.grades')
+                ->with('success', 'Department successfully created!');
+        } catch (\Exception $e) {
             return redirect()->back()
-                           ->withErrors($e->errors())
-                           ->withInput();
+                ->with('error', 'Failed to create department: ' . $e->getMessage())
+                ->withInput();
         }
     }
 

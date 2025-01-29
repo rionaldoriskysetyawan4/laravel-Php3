@@ -113,7 +113,7 @@ class DepartmentController extends Controller
 
             $department->save();
 
-            return redirect()->route('departments.index')
+            return redirect()->route('admin.departments')
                 ->with('success', 'Department successfully created!');
         } catch (\Exception $e) {
             return redirect()->back()
