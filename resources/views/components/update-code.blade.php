@@ -34,6 +34,8 @@
                     <textarea id="editDescription" name="description" rows="3" class="mt-1 block w-full rounded-lg border-gray-300 p-2"></textarea>
                 </div>
 
+ 
+
                 <div class="flex justify-end space-x-3 mt-4">
                     <button type="button" data-modal-close="editModal" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Update Department</button>

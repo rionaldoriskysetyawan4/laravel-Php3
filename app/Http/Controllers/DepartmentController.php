@@ -96,24 +96,28 @@ class DepartmentController extends Controller
             $rules['description'] = 'nullable|string|max:500';
         } else {
             $rules['clasname'] = 'required|string|max:255';
+            $rules['department_id'] = 'required|integer|exists:departments,id';
         }
 
         $validated = $request->validate($rules);
-
+        
+        $department = new Department();
         try {
-            $department = new Department();
-            
-            // If departname exists, we're in "this-depart" mode
             if (isset($validated['departname'])) {
+
                 $department->name = $validated['departname'];
                 $department->description = $validated['description'] ?? null;
+
             } else {
-                $department->class_name = $validated['clasname'];
+
+                $department->name = $validated['clasname'];
+                $department->department_id = $validated['department_id']; // Fix case sensitivity
+
             }
 
-            $department->save();
-
-            return redirect()->route('admin.departments')
+            $department->save(); // Save the department
+            
+            return redirect()->route('departments.store')
                 ->with('success', 'Department successfully created!');
         } catch (\Exception $e) {
             return redirect()->back()

@@ -176,6 +176,7 @@
     @component('components.grddprt', ['departments' => $grades])
     @endcomponent
     {{-- <x-grddprt :departments={{ $students }}></x-grddprt> --}}
+    
 
     <x-updatecode></x-updatecode>
     <x-deletecode></x-deletecode>
@@ -195,61 +196,77 @@
 
     <script>
         //Edit
-        // Function to show the edit modal and set the form action
-        function showEditModal(gradesId) {
-            const editForm = document.getElementById('editForm');
+       // Function to show the edit modal and set the form action
+function showEditModal(gradesId) {
+    const editForm = document.getElementById('editForm');
+    if (editForm) {
+        editForm.action = `/admin/grades/${gradesId}`;
+    }
+
+    const editModal = document.getElementById('editModal');
+    if (editModal) {
+        editModal.classList.remove('hidden');
+        editModal.classList.add('flex');
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll('.edit-button');
+    const editForm = document.getElementById('editForm');
+    const editModal = document.getElementById('editModal');
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function (event) {
+        if (event.target === editModal) {
+            editModal.classList.add('hidden');
+            editModal.classList.remove('flex');
+        }
+    });
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const gradesId = button.getAttribute('data-id');
+            const thisEmail = button.getAttribute('data-this-email') === 'false';
+            const emailField = document.getElementById('emailField');
+            const descriptionField = document.getElementById('descriptionField');
+            const gradesIdInput = document.getElementById('updatecodeId');
+            const emailInput = document.getElementById('editEmail');
+            const descriptionInput = document.getElementById('editDescription');
+
             if (editForm) {
-                editForm.action = `/admin/grades/${gradesId}`; // Ensure this is correct
+                editForm.action = `/admin/grades/${gradesId}`;
             }
 
-            const editModal = document.getElementById('editModal');
+            if (gradesIdInput) {
+                gradesIdInput.value = gradesId;
+            }
+
+            if (emailInput) {
+                emailInput.value = '';
+            }
+            
+            if (descriptionInput) {
+                descriptionInput.value = '';
+            }
+
+            if (thisEmail) {
+                emailField?.classList.remove('hidden');
+                descriptionField?.classList.add('hidden');
+            } else {
+                emailField?.classList.add('hidden');
+                //kalau ada tambahan waktu ganti remove
+                descriptionField?.classList.add('hidden');
+            }
+
             if (editModal) {
                 editModal.classList.remove('hidden');
+                editModal.classList.add('flex');
             }
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            const editButtons = document.querySelectorAll('.edit-button');
-            const editForm = document.getElementById('editForm');
-
-            editButtons.forEach(button => {
-                button.addEventListener('click', function() {
-
-                    const gradesId = button.getAttribute('data-id');
-                    const thisEmail = button.getAttribute('data-this-email') === 'false';
-                    const emailField = document.getElementById('emailField');
-                    const descriptionField = document.getElementById('descriptionField');
-                    const editForm = document.getElementById('editForm');
-                    const gradesIdInput = document.getElementById('updatecodeId');
-                    const emailInput = document.getElementById('editEmail');
-                    const descriptionInput = document.getElementById('editDescription');
-
-                    // lupa dongo
-                    editForm.action = '/admin/grades/' + gradesId;
-
-                    // Set departmentId value to the form
-                    gradesIdInput.value = gradesId;
-
-                    // Clear previous values
-                    emailInput.value = '';
-                    descriptionInput.value = '';
-
-                    // Show or hide fields based on thisEmail
-                    if (thisEmail) {
-                        emailField.classList.remove('hidden');
-                        descriptionField.classList.add('hidden');
-                    } else {
-                        emailField.classList.add('hidden');
-                        descriptionField.classList.remove('hidden');
-                    }
-
-                    // Show the modal
-                    const editModal = document.getElementById('editModal');
-                    if (editModal) {
-                        editModal.classList.remove('hidden');
-                    }
-                });
-            });
         });
+    });
+});
+
+        
 
 
         //DELETE

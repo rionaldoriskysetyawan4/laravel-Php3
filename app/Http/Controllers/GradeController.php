@@ -28,6 +28,8 @@ class GradeController extends Controller
             'grade' => $grade
         ]);
     }
+
+    
     public function store(Request $request)
     {
         // Validate based on which fields should be present
@@ -37,28 +39,27 @@ class GradeController extends Controller
             $rules['departname'] = 'required|string|max:255';
             $rules['description'] = 'nullable|string|max:500';
         } else {
-            $rules['clasname'] = 'required|int|max:2';
+            $rules['clasname'] = 'required|string|max:255';
             $rules['department_id'] = 'required|integer|exists:departments,id';
         }
 
         $validated = $request->validate($rules);
 
         try {
-            $department = new Department();
-            
-            // If departname exists, we're in "this-depart" mode
             if (isset($validated['departname'])) {
+                $department = new Department();
                 $department->name = $validated['departname'];
                 $department->description = $validated['description'] ?? null;
+                $department->save(); // Save the department
             } else {
-                $department->class_name = $validated['clasname'];
-                $department->departmentId = $validated['department_id'];
+                $grade = new Grade();
+                $grade->name = $validated['clasname'];
+                $grade->department_id = $validated['department_id']; // Fix case sensitivity
+                $grade->save(); // Save the grade
             }
 
-            $department->save();
-
-            return redirect()->route('admin.grades')
-                ->with('success', 'Department successfully created!');
+            return redirect()->route('grades.store')
+                ->with('success', 'Grades successfully created!');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to create department: ' . $e->getMessage())
@@ -88,7 +89,8 @@ class GradeController extends Controller
             // If it's not an email edit, validate the email and name
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string'
+                //kalau ada tambahan waktu ganti required
+                'description' => 'nullable|string'
             ]);
             
             // Update the department with the validated name and email
