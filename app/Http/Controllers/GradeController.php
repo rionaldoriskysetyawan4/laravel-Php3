@@ -40,13 +40,13 @@ class GradeController extends Controller
             $rules['description'] = 'nullable|string|max:500';
         } else {
             $rules['clasname'] = 'required|string|max:255';
-            $rules['department_id'] = 'required|integer|exists:departments,id';
+            $rules['department_id'] = 'required|exists:departments,id';
         }
 
         $validated = $request->validate($rules);
 
         try {
-            if (isset($validated['departname'])) {
+            if ($request->has('departname')) {
                 $department = new Department();
                 $department->name = $validated['departname'];
                 $department->description = $validated['description'] ?? null;

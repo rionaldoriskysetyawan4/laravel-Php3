@@ -39,6 +39,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::get('/students/{id}', [StudentController::class, 'read'])->name('students.read');
+
+
 
     // Grades
     Route::get('/grades', [AdminPage::class, 'index3'])->name('admin.grades');

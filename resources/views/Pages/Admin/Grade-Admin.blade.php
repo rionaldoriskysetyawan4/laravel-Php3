@@ -306,14 +306,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         //Tambahkan 
-
-        function showCreateModal() {
-    const modal = document.getElementById('createGrddprt');
-    if (modal) {
-        modal.classList.remove('hidden');
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('createGrddprt');
     const openButton = document.getElementById('opencreateGrddprt');
@@ -366,4 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// melihat 
+function showView(){
+
+}
     </script>

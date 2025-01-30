@@ -150,9 +150,11 @@
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="apple-imac-20-dropdown-button">
                                 <li>
-                                    <a href="#"
-                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
+                                    <a href="#" data-student-id="{{ $student->id }}"
+                                        class="show-student-btn block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                 </li>
+
+
                                 <li>
                                     <a href="#" data-modal-toggle="editModal" data-id="{{ $student->id }}"
                                         data-this-email="{{ empty($student->email) ? 'true' : 'false' }}"
@@ -162,6 +164,7 @@
                                 <li>
                                     <a data-modal-toggle="deleteModal" data-id="{{ $student->id }}"
                                         class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
+                                </li>
                             </ul>
                         </div>
                     </td>
@@ -174,6 +177,7 @@
     {{-- <x-createcode :students={{ $students }}></x-createcode> --}}
 
 
+    <x-detail></x-detail>
     <x-updatecode></x-updatecode>
     <x-deletecode></x-deletecode>
     </x-layout>
@@ -227,62 +231,62 @@
 
         //edit
         function showEditModal(studentId) {
-        const editForm = document.getElementById('editForm');
-        if (editForm) {
-            editForm.action = `/admin/students/${studentId}`; // Ensure this is correct
+            const editForm = document.getElementById('editForm');
+            if (editForm) {
+                editForm.action = `/admin/students/${studentId}`; // Ensure this is correct
+            }
+
+            const editModal = document.getElementById('editModal');
+            if (editModal) {
+                editModal.classList.remove('hidden');
+            }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            const editButtons = document.querySelectorAll('.edit-button');
+            const editForm = document.getElementById('editForm');
 
-        const editModal = document.getElementById('editModal');
-        if (editModal) {
-            editModal.classList.remove('hidden');
-        }
-    }
-    document.addEventListener("DOMContentLoaded", function() {
-        const editButtons = document.querySelectorAll('.edit-button');
-        const editForm = document.getElementById('editForm');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
 
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+                    const studentId = button.getAttribute('data-id');
+                    const thisEmail = button.getAttribute('data-this-email') === 'false';
+                    const emailField = document.getElementById('emailField');
+                    const descriptionField = document.getElementById('descriptionField');
+                    const editForm = document.getElementById('editForm');
+                    const studentIdInput = document.getElementById('updatecodeId');
+                    const emailInput = document.getElementById('editEmail');
+                    const descriptionInput = document.getElementById('editDescription');
 
-                const studentId = button.getAttribute('data-id');
-                const thisEmail = button.getAttribute('data-this-email') === 'false';
-                const emailField = document.getElementById('emailField');
-                const descriptionField = document.getElementById('descriptionField');
-                const editForm = document.getElementById('editForm');
-                const studentIdInput = document.getElementById('updatecodeId');
-                const emailInput = document.getElementById('editEmail');
-                const descriptionInput = document.getElementById('editDescription');
+                    // lupa dongo
+                    editForm.action = '/admin/students/' + studentId;
 
-                // lupa dongo
-                editForm.action = '/admin/students/' + studentId;
+                    // Set departmentId value to the form
+                    studentIdInput.value = studentId;
 
-                // Set departmentId value to the form
-                studentIdInput.value = studentId;
+                    // Clear previous values
+                    emailInput.value = '';
+                    descriptionInput.value = '';
 
-                // Clear previous values
-                emailInput.value = '';
-                descriptionInput.value = '';
+                    // Show or hide fields based on thisEmail
+                    if (thisEmail) {
+                        emailField.classList.remove('hidden');
+                        descriptionField.classList.add('hidden');
+                    } else {
+                        emailField.classList.add('hidden');
+                        descriptionField.classList.remove('hidden');
+                    }
 
-                // Show or hide fields based on thisEmail
-                if (thisEmail) {
-                    emailField.classList.remove('hidden');
-                    descriptionField.classList.add('hidden');
-                } else {
-                    emailField.classList.add('hidden');
-                    descriptionField.classList.remove('hidden');
-                }
-
-                // Show the modal
-                const editModal = document.getElementById('editModal');
-                if (editModal) {
-                    editModal.classList.remove('hidden');
-                }
+                    // Show the modal
+                    const editModal = document.getElementById('editModal');
+                    if (editModal) {
+                        editModal.classList.remove('hidden');
+                    }
+                });
             });
         });
-    });
 
-    
-    //tambahkan
+
+        //tambahkan
         document.addEventListener('DOMContentLoaded', function() {
             // Ambil elemen modal
             const modal = document.getElementById('createModal');
@@ -307,6 +311,68 @@
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('createModal')) {
                 document.getElementById('createModal').classList.add('hidden');
+            }
+        });
+
+
+        //Show
+        document.addEventListener('DOMContentLoaded', function() {
+            const showReadModal = document.getElementById('showReadModal');
+
+            // Event delegation for show buttons
+            document.addEventListener('click', async function(e) {
+                const showButton = e.target.closest('.showReadModal, .show-student-btn');
+
+                if (showButton) {
+                    e.preventDefault();
+                    const studentId = showButton.dataset.studentId;
+
+                    // try {
+                    // Fetch student data
+                    const response = await fetch(`/admin/students/${studentId}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    // Update modal content
+                    const fields = ['name', 'grade', 'department', 'email', 'address'];
+                    fields.forEach(field => {
+                        const element = document.getElementById(`show-${field}`);
+                        if (element) {
+                            element.textContent = data[field] || 'Not provided';
+                        }
+                    });
+
+                    // Show modal
+                    showModal();
+                    // } 
+                    // catch (error) {
+                    //     console.error('Error fetching student data:', error);
+                    //     alert('Failed to load student data. Please try again.');
+                    // }
+                }
+            });
+
+
+            // Close modal when clicking outside
+            showReadModal.addEventListener('click', function(e) {
+                if (e.target === showReadModal) {
+                    hideModal();
+                }
+            });
+
+            // Modal show/hide functions
+            function showModal() {
+                showReadModal.classList.remove('hidden');
+                showReadModal.classList.add('flex');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+
+            function hideModal() {
+                showReadModal.classList.add('hidden');
+                showReadModal.classList.remove('flex');
+                document.body.style.overflow = ''; // Restore scrolling
             }
         });
     </script>

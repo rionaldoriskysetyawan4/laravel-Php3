@@ -72,8 +72,23 @@ class StudentController extends Controller
             'student' => $student
         ]);
     }
-
-
+    
+    
+    public function read($id)
+    {
+        try {
+            $student = Student::findOrFail($id);
+            return response()->json([
+                'name' => $student->name,
+                'grade' => $student->grade->name,
+                'department' => $student->department->name,
+                'email' => $student->email,
+                'address' => $student->address
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Student not found'], 404);
+        }
+    }
 
     // Delete a student
     public function destroy($id)
