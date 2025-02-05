@@ -10,9 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
 
         $students = Student::with(['grade', 'department'])->get();
 

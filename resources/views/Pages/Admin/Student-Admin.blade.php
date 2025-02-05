@@ -14,7 +14,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input type="text" id="simple-search"
+                        <input type="text" id="simple-search" name="search"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Search" required="">
                     </div>
@@ -172,6 +172,26 @@
             @endforeach
         </tbody>
     </table>
+    <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            Showing {{ $students->firstItem() }}-{{ $students->lastItem() }} of {{ $students->total() }}
+        </span>
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            <li>
+                <a href="{{ $students->previousPageUrl() }}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white {{ !$students->onFirstPage() ?: 'opacity-50 cursor-not-allowed' }}">Previous</a>
+            </li>
+
+            @foreach ($students->getUrlRange(1, $students->lastPage()) as $page => $url)
+                <li>
+                    <a href="{{ $url }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white {{ $students->currentPage() == $page ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : '' }}">{{ $page }}</a>
+                </li>
+            @endforeach
+
+            <li>
+                <a href="{{ $students->nextPageUrl() }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white {{ $students->hasMorePages() ?: 'opacity-50 cursor-not-allowed' }}">Next</a>
+            </li>
+        </ul>
+    </nav>
     @component('components.create-code', ['grades' => $grades, 'departments' => $departments])
     @endcomponent
     {{-- <x-createcode :students={{ $students }}></x-createcode> --}}
