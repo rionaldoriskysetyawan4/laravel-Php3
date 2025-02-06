@@ -40,7 +40,7 @@ class GradeController extends Controller
             $rules['description'] = 'nullable|string|max:500';
         } else {
             $rules['clasname'] = 'required|string|max:255';
-            $rules['department_id'] = 'required|exists:departments,id';
+            $rules['department_id'] = 'required|integer|exists:departments,id';
         }
 
         $validated = $request->validate($rules);
@@ -53,8 +53,9 @@ class GradeController extends Controller
                 $department->save(); // Save the department
             } else {
                 $grade = new Grade();
+                $department = new Department();
                 $grade->name = $validated['clasname'];
-                $grade->department_id = $validated['department_id']; // Fix case sensitivity
+                $department->department_id = $validated['department_id']; // Fix case sensitivity
                 $grade->save(); // Save the grade
             }
 

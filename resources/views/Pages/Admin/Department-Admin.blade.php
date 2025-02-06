@@ -165,12 +165,12 @@
             @endforeach
         </tbody>
     </table>
-    @component('components.grddprt', ['departments' => $departments])
+    @component('components.Admin.CRUD.grddprt', ['departments' => $departments])
     @endcomponent
     {{-- <x-grddprt :departments={{ $students }}></x-grddprt> --}}
 
-    <x-updatecode></x-updatecode>
-    <x-deletecode></x-deletecode>
+    <x-Admin.CRUD.update-code></x-Admin.CRUD.update-code>
+    <x-Admin.CRUD.delete-code></x-Admin.CRUD.delete-code>
 
 </x-layout-admin>
 

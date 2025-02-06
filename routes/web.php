@@ -29,31 +29,34 @@ Route::get('contact', function () {
     ]);
 });
 
-
 // Group routes with 'admin' prefix
 Route::prefix('admin')->group(function () {
     Route::get('/home', [AdminPage::class, 'index'])->name('admin.home');
 
     // Students
-    Route::get('/students', [AdminPage::class, 'index2'])->name('admin.students');
-    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
-    Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
-    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
-    Route::get('/students/{id}', [StudentController::class, 'read'])->name('students.read');
-
-
+    Route::prefix('students')->group(function () {
+        Route::get('/', [AdminPage::class, 'index2'])->name('admin.students');
+        Route::post('/', [StudentController::class, 'store'])->name('students.store');
+        Route::put('/{id}', [StudentController::class, 'update'])->name('students.update');
+        Route::delete('/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+        Route::get('/{id}', [StudentController::class, 'read'])->name('students.read');
+    });
 
     // Grades
-    Route::get('/grades', [AdminPage::class, 'index3'])->name('admin.grades');
-    Route::post('/grades', [GradeController::class, 'store'])->name('grades.store');
-    Route::put('/grades/{id}', [GradeController::class, 'update'])->name('grades.update');
-    Route::delete('/grades/{id}', [GradeController::class, 'destroy'])->name('grades.destroy');
+    Route::prefix('grades')->group(function () {
+        Route::get('/', [AdminPage::class, 'index3'])->name('admin.grades');
+        Route::post('/', [GradeController::class, 'store'])->name('grades.store');
+        Route::put('/{id}', [GradeController::class, 'update'])->name('grades.update');
+        Route::delete('/{id}', [GradeController::class, 'destroy'])->name('grades.destroy');
+    });
 
     // Departments
-    Route::get('/departments', [AdminPage::class, 'index4'])->name('admin.departments');
-    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-    Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
-    Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+    Route::prefix('departments')->group(function () {
+        Route::get('/', [AdminPage::class, 'index4'])->name('admin.departments');
+        Route::post('/', [DepartmentController::class, 'store'])->name('departments.store');
+        Route::put('/{id}', [DepartmentController::class, 'update'])->name('departments.update');
+        Route::delete('/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+    });
 
     // Contact Admin
     Route::get('/contact', function () {

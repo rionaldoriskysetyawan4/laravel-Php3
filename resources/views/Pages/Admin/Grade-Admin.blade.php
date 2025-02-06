@@ -173,13 +173,13 @@
         </tbody>
     </table>
 
-    @component('components.grddprt', ['departments' => $grades])
+    @component('components.Admin.CRUD.grddprt', ['departments' => $grades])
     @endcomponent
     {{-- <x-grddprt :departments={{ $students }}></x-grddprt> --}}
     
 
-    <x-updatecode></x-updatecode>
-    <x-deletecode></x-deletecode>
+    <x-Admin.CRUD.update-code></x-Admin.CRUD.update-code>
+    <x-Admin.CRUD.delete-code></x-Admin.CRUD.delete-code>
     </x-layout>
 
     @if (session('success'))

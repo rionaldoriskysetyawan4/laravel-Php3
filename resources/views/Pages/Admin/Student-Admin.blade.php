@@ -192,14 +192,14 @@
             </li>
         </ul>
     </nav>
-    @component('components.create-code', ['grades' => $grades, 'departments' => $departments])
+    @component('components.Admin.CRUD.create-code', ['grades' => $grades, 'departments' => $departments])
     @endcomponent
     {{-- <x-createcode :students={{ $students }}></x-createcode> --}}
 
 
-    <x-detail></x-detail>
-    <x-updatecode></x-updatecode>
-    <x-deletecode></x-deletecode>
+    <x-Admin.CRUD.detail></x-Admin.CRUD.detail>
+    <x-Admin.CRUD.update-code></x-Admin.CRUD.update-code>
+    <x-Admin.CRUD.delete-code></x-Admin.CRUD.delete-code>
     </x-layout>
 
     @if (session('success'))
